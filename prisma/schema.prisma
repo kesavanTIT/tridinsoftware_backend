@@ -1,0 +1,36 @@
+// Prisma Schema file for Tridin Backend
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ContactSubmission {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  subject   String
+  service   String
+  message   String
+  status    String   @default("NEW") // NEW, IN_REVIEW, RESPONDED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobApplication {
+  id             String   @id @default(uuid())
+  roleTitle      String
+  department     String
+  applicantName  String
+  applicantEmail String
+  applicantPhone String
+  portfolioUrl   String
+  coverNote      String?
+  status         String   @default("SUBMITTED") // SUBMITTED, SHORTLISTED, REJECTED, INTERVIEWING
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

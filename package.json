@@ -1,0 +1,34 @@
+{
+  "name": "tridin-backend",
+  "version": "1.0.0",
+  "description": "Node.js Express Prisma Backend Server for Tridin Software Private Limited",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [
+    "express",
+    "prisma",
+    "zeptomail",
+    "nodemailer",
+    "tridin-software"
+  ],
+  "author": "Tridin Software Private Limited",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "axios": "^1.7.4",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "prisma": "^5.18.0"
+  }
+}
