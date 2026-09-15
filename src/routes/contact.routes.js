@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const prisma = require('../config/prisma');
-const { sendContactNotification } = require('../utils/zeptomail');
+const { sendContactNotification, sendContactUserConfirmation } = require('../utils/zeptomail');
 
 // POST /api/contact - Submit new contact form request
 router.post('/', async (req, res) => {
   try {
-    const { name, email, subject, service, message } = req.body;
+    const { name, email, phone, subject, service, message } = req.body;
 
     if (!name || !email || !subject || !message) {
       return res.status(400).json({
@@ -20,15 +20,21 @@ router.post('/', async (req, res) => {
       data: {
         name,
         email,
+        phone: phone || null,
         subject,
         service: service || 'Full-Stack Web App',
         message,
       },
     });
 
-    // 2. Trigger ZeptoMail Email Notification to HR
+    // 2. Trigger ZeptoMail Email Notification to Admin / HR
     sendContactNotification(submission).catch((err) =>
-      console.error('Async ZeptoMail notification error:', err)
+      console.error('Async ZeptoMail HR notification error:', err)
+    );
+
+    // 3. Trigger ZeptoMail User Confirmation Email
+    sendContactUserConfirmation(submission).catch((err) =>
+      console.error('Async ZeptoMail User confirmation error:', err)
     );
 
     return res.status(201).json({

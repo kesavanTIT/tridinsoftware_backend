@@ -4,14 +4,15 @@ const cors = require('cors');
 
 const contactRoutes = require('./routes/contact.routes');
 const careerRoutes = require('./routes/career.routes');
+const adminRoutes = require('./routes/admin.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({ origin: '*' }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
 // Health Check Endpoint
 app.get('/health', (req, res) => {
@@ -25,6 +26,7 @@ app.get('/health', (req, res) => {
 // API Routes
 app.use('/api/contact', contactRoutes);
 app.use('/api/careers', careerRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 Route Handler
 app.use((req, res) => {

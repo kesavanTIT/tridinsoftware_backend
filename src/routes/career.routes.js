@@ -15,14 +15,23 @@ router.post('/apply', async (req, res) => {
       applicantName,
       applicantEmail,
       applicantPhone,
+      experience,
+      qualification,
+      noticePeriod,
+      currentLocation,
+      relocateConsent,
+      keySkills,
+      expectedSalary,
       portfolioUrl,
+      resumeFileName,
+      resumeBase64,
       coverNote,
     } = req.body;
 
-    if (!roleTitle || !applicantName || !applicantEmail || !applicantPhone || !portfolioUrl) {
+    if (!roleTitle || !applicantName || !applicantEmail || !applicantPhone) {
       return res.status(400).json({
         success: false,
-        error: 'Role title, name, email, phone, and portfolio URL are required.',
+        error: 'Role title, name, email, and phone number are required.',
       });
     }
 
@@ -34,13 +43,26 @@ router.post('/apply', async (req, res) => {
         applicantName,
         applicantEmail,
         applicantPhone,
-        portfolioUrl,
+        experience: experience || 'Fresher (0-1 Yrs)',
+        qualification: qualification || 'B.E / B.Tech',
+        noticePeriod: noticePeriod || 'Immediate Joiner',
+        currentLocation: currentLocation || 'Chennai',
+        relocateConsent: relocateConsent || 'Yes',
+        keySkills: keySkills || '',
+        expectedSalary: expectedSalary || 'As per company norms',
+        portfolioUrl: portfolioUrl || '',
+        resumeUrl: resumeFileName || '',
+        resumeBase64: resumeBase64 || '',
         coverNote: coverNote || null,
       },
     });
 
-    // 2. Trigger ZeptoMail HR Notification
-    sendJobApplicationNotification(application).catch((err) =>
+    // 2. Trigger ZeptoMail HR Notification with Attached Resume File
+    sendJobApplicationNotification({
+      ...application,
+      resumeFileName,
+      resumeBase64,
+    }).catch((err) =>
       console.error('ZeptoMail HR notification error:', err)
     );
 
@@ -80,6 +102,28 @@ router.get('/applications', async (req, res) => {
     return res.status(500).json({
       success: false,
       error: 'Failed to fetch job applications.',
+    });
+  }
+});
+
+// GET /api/careers/jobs - Fetch active dynamic jobs for website
+router.get('/jobs', async (req, res) => {
+  try {
+    const jobs = await prisma.job.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return res.status(200).json({
+      success: true,
+      count: jobs.length,
+      data: jobs,
+    });
+  } catch (error) {
+    console.error('Error fetching dynamic jobs for website:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to fetch active jobs.',
     });
   }
 });

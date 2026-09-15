@@ -9,10 +9,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model AdminUser {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  name      String   @default("Admin User")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model ContactSubmission {
   id        String   @id @default(uuid())
   name      String
   email     String
+  phone     String?
   subject   String
   service   String
   message   String
@@ -22,15 +33,41 @@ model ContactSubmission {
 }
 
 model JobApplication {
-  id             String   @id @default(uuid())
-  roleTitle      String
-  department     String
-  applicantName  String
-  applicantEmail String
-  applicantPhone String
-  portfolioUrl   String
-  coverNote      String?
-  status         String   @default("SUBMITTED") // SUBMITTED, SHORTLISTED, REJECTED, INTERVIEWING
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id              String   @id @default(uuid())
+  roleTitle       String
+  department      String
+  applicantName   String
+  applicantEmail  String
+  applicantPhone  String
+  experience      String   @default("Fresher (0-1 Yrs)")
+  qualification   String?  @default("B.E / B.Tech")
+  noticePeriod    String?  @default("Immediate Joiner")
+  currentLocation String?  @default("Chennai")
+  relocateConsent String?  @default("Yes")
+  keySkills       String?  @default("")
+  expectedSalary  String?  @default("As per company norms")
+  portfolioUrl    String
+  resumeUrl       String?  @default("")
+  resumeBase64    String?  @default("")
+  coverNote       String?
+  status          String   @default("SUBMITTED") // SUBMITTED, SHORTLISTED, REJECTED, INTERVIEWING
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Job {
+  id           String   @id @default(uuid())
+  title        String
+  department   String
+  location     String   @default("Chennai, India")
+  type         String   @default("Full-Time")
+  experience   String   @default("0-3 Years")
+  vacancies    Int      @default(10)
+  badge        String   @default("Hiring")
+  description  String
+  curriculum   String[] @default([])
+  requirements String[] @default([])
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

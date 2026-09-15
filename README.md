@@ -53,9 +53,9 @@ PORT=5000
 DATABASE_URL="postgresql://postgres:password@localhost:5432/tridindb?schema=public"
 
 ZEPTOMAIL_API_KEY="Zoho-encz-YOUR_ZEPTOMAIL_SENDMAIL_TOKEN"
-ZEPTOMAIL_FROM_EMAIL="hr@tridinsoftware.com"
+ZEPTOMAIL_FROM_EMAIL="career@tridinsoftware.com"
 ZEPTOMAIL_FROM_NAME="Tridin Software HR"
-HR_NOTIFICATION_EMAIL="hr@tridinsoftware.com"
+HR_NOTIFICATION_EMAIL="career@tridinsoftware.com"
 ```
 
 ### 3. Run Prisma Database Migrations
