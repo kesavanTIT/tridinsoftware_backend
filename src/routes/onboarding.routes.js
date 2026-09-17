@@ -94,48 +94,102 @@ router.post('/submit', async (req, res) => {
     const randomNum = Math.floor(1000 + Math.random() * 9000);
     const onboardingId = `TRD-ONB-${year}-${randomNum}`;
 
-    // Upsert or create candidate record
-    const candidate = await prisma.onboardingCandidate.create({
-      data: {
-        onboardingId,
-        fullName: personalInfo.fullName,
-        email: personalInfo.email,
-        phone: personalInfo.phone,
-        role: personalInfo.role || 'Software Engineer',
-        department: 'Engineering',
-        joiningDate: personalInfo.joiningDate || '',
-        dob: personalInfo.dob || '',
-        gender: personalInfo.gender || 'Male',
-        bloodGroup: personalInfo.bloodGroup || 'O+',
-        currentAddress: personalInfo.currentAddress || '',
-        permanentAddress: personalInfo.permanentAddress || '',
-        emergencyContactName: personalInfo.emergencyContactName || '',
-        emergencyContactPhone: personalInfo.emergencyContactPhone || '',
-        bankName: personalInfo.bankName || '',
-        accountNumber: personalInfo.accountNumber || '',
-        ifscCode: personalInfo.ifscCode || '',
-        panNumber: personalInfo.panNumber,
-        aadharNumber: personalInfo.aadharNumber,
-        status: 'Pending',
-        documents: {
-          create: (documents || []).map((doc) => ({
-            category: doc.category,
-            type: doc.type,
-            name: doc.name,
-            size: doc.size || '1.0 MB',
-            fileUrl: doc.fileUrl || '',
-            fileBase64: doc.fileBase64 || '',
-            status: 'Pending',
-          })),
-        },
-      },
-      include: {
-        documents: true,
-      },
+    // Check if candidate with email already exists
+    const existingCandidate = await prisma.onboardingCandidate.findUnique({
+      where: { email: personalInfo.email },
     });
 
-    // Send Async Email Notification
-    sendOnboardingEmailNotification(candidate, candidate.documents.length);
+    let candidate;
+
+    if (existingCandidate) {
+      // Delete previous documents and update candidate details
+      await prisma.onboardingDocument.deleteMany({
+        where: { candidateId: existingCandidate.id },
+      });
+
+      candidate = await prisma.onboardingCandidate.update({
+        where: { id: existingCandidate.id },
+        data: {
+          fullName: personalInfo.fullName,
+          phone: personalInfo.phone,
+          role: personalInfo.role || existingCandidate.role || 'Software Engineer',
+          department: 'Engineering',
+          joiningDate: personalInfo.joiningDate || '',
+          dob: personalInfo.dob || '',
+          gender: personalInfo.gender || 'Male',
+          bloodGroup: personalInfo.bloodGroup || 'O+',
+          currentAddress: personalInfo.currentAddress || '',
+          permanentAddress: personalInfo.permanentAddress || '',
+          emergencyContactName: personalInfo.emergencyContactName || '',
+          emergencyContactPhone: personalInfo.emergencyContactPhone || '',
+          bankName: personalInfo.bankName || '',
+          accountNumber: personalInfo.accountNumber || '',
+          ifscCode: personalInfo.ifscCode || '',
+          panNumber: personalInfo.panNumber,
+          aadharNumber: personalInfo.aadharNumber,
+          status: 'Pending',
+          documents: {
+            create: (documents || []).map((doc) => ({
+              category: doc.category,
+              type: doc.type,
+              name: doc.name,
+              size: doc.size || '1.0 MB',
+              fileUrl: doc.fileUrl || '',
+              fileBase64: doc.fileBase64 || '',
+              status: 'Pending',
+            })),
+          },
+        },
+        include: {
+          documents: true,
+        },
+      });
+    } else {
+      // Create new candidate
+      candidate = await prisma.onboardingCandidate.create({
+        data: {
+          onboardingId,
+          fullName: personalInfo.fullName,
+          email: personalInfo.email,
+          phone: personalInfo.phone,
+          role: personalInfo.role || 'Software Engineer',
+          department: 'Engineering',
+          joiningDate: personalInfo.joiningDate || '',
+          dob: personalInfo.dob || '',
+          gender: personalInfo.gender || 'Male',
+          bloodGroup: personalInfo.bloodGroup || 'O+',
+          currentAddress: personalInfo.currentAddress || '',
+          permanentAddress: personalInfo.permanentAddress || '',
+          emergencyContactName: personalInfo.emergencyContactName || '',
+          emergencyContactPhone: personalInfo.emergencyContactPhone || '',
+          bankName: personalInfo.bankName || '',
+          accountNumber: personalInfo.accountNumber || '',
+          ifscCode: personalInfo.ifscCode || '',
+          panNumber: personalInfo.panNumber,
+          aadharNumber: personalInfo.aadharNumber,
+          status: 'Pending',
+          documents: {
+            create: (documents || []).map((doc) => ({
+              category: doc.category,
+              type: doc.type,
+              name: doc.name,
+              size: doc.size || '1.0 MB',
+              fileUrl: doc.fileUrl || '',
+              fileBase64: doc.fileBase64 || '',
+              status: 'Pending',
+            })),
+          },
+        },
+        include: {
+          documents: true,
+        },
+      });
+    }
+
+    // Send Async Email Notification (caught so email errors never block response)
+    sendOnboardingEmailNotification(candidate, candidate.documents.length).catch((emailErr) => {
+      console.error('ZeptoMail background email sending failed:', emailErr);
+    });
 
     res.status(201).json({
       success: true,
