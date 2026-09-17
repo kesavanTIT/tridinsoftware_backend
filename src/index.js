@@ -5,6 +5,7 @@ const cors = require('cors');
 const contactRoutes = require('./routes/contact.routes');
 const careerRoutes = require('./routes/career.routes');
 const adminRoutes = require('./routes/admin.routes');
+const onboardingRoutes = require('./routes/onboarding.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -27,6 +28,7 @@ app.get('/health', (req, res) => {
 app.use('/api/contact', contactRoutes);
 app.use('/api/careers', careerRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/onboarding', onboardingRoutes);
 
 // 404 Route Handler
 app.use((req, res) => {
@@ -40,4 +42,5 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Tridin Backend Server running on http://localhost:${PORT}`);
   console.log(`📡 Health Check: http://localhost:${PORT}/health`);
+  console.log(`📑 Onboarding API: http://localhost:${PORT}/api/onboarding/all`);
 });

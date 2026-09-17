@@ -106,11 +106,13 @@ router.get('/verify-token', authenticateJWT, (req, res) => {
 // Admin Dashboard Overview Stats
 router.get('/stats', authenticateJWT, async (req, res) => {
   try {
-    const [totalContacts, newContacts, totalApplications, totalJobs] = await Promise.all([
+    const [totalContacts, newContacts, totalApplications, totalJobs, totalOnboardings, pendingOnboardings] = await Promise.all([
       prisma.contactSubmission.count(),
       prisma.contactSubmission.count({ where: { status: 'NEW' } }),
       prisma.jobApplication.count(),
       prisma.job.count({ where: { isActive: true } }),
+      prisma.onboardingCandidate.count(),
+      prisma.onboardingCandidate.count({ where: { status: 'Pending' } }),
     ]);
 
     res.status(200).json({
@@ -120,6 +122,8 @@ router.get('/stats', authenticateJWT, async (req, res) => {
         newContacts,
         totalApplications,
         totalJobs,
+        totalOnboardings,
+        pendingOnboardings,
       },
     });
   } catch (error) {
