@@ -311,4 +311,248 @@ router.post('/verify-doc', async (req, res) => {
   }
 });
 
+// 5. Admin Endpoint: Create Candidate Profile with Credentials (ID format: Tridin-2026-XXXX)
+router.post('/candidate/create', async (req, res) => {
+  try {
+    const { fullName, email, phone, role, password } = req.body;
+
+    if (!fullName || !email) {
+      return res.status(400).json({
+        success: false,
+        error: 'Candidate Full Name and Email are required.',
+      });
+    }
+
+    const year = new Date().getFullYear();
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const onboardingId = `Tridin-${year}-${randomNum}`;
+    const candidatePassword = password && password.trim() ? password.trim() : `Tridin@${year}`;
+
+    // Check if candidate with email already exists
+    const existing = await prisma.onboardingCandidate.findUnique({
+      where: { email: email.trim().toLowerCase() },
+    });
+
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        error: `Candidate with email "${email}" already exists.`,
+      });
+    }
+
+    const newCandidate = await prisma.onboardingCandidate.create({
+      data: {
+        onboardingId,
+        fullName: fullName.trim(),
+        email: email.trim().toLowerCase(),
+        phone: phone ? phone.trim() : '',
+        role: role ? role.trim() : 'Software Engineer',
+        password: candidatePassword,
+        status: 'Pending',
+      },
+      include: {
+        documents: true,
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `Candidate created successfully with Onboarding ID: ${onboardingId}`,
+      data: newCandidate,
+    });
+  } catch (err) {
+    console.error('Error creating candidate credentials:', err);
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to create candidate credentials.',
+    });
+  }
+});
+
+// 6. Candidate Login Endpoint (Authenticates by Email or Onboarding ID + Password)
+router.post('/login', async (req, res) => {
+  try {
+    const { identifier, password } = req.body;
+
+    if (!identifier || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Username / Email / Reference ID and Password are required.',
+      });
+    }
+
+    const cleanIdentifier = identifier.trim().toLowerCase();
+    const candidate = await prisma.onboardingCandidate.findFirst({
+      where: {
+        OR: [
+          { email: { equals: cleanIdentifier, mode: 'insensitive' } },
+          { onboardingId: { equals: identifier.trim(), mode: 'insensitive' } },
+        ],
+      },
+      include: {
+        documents: true,
+      },
+    });
+
+    if (!candidate) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid Credentials. No candidate account found with this ID / Email.',
+      });
+    }
+
+    // Verify Password
+    if (candidate.password !== password.trim()) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid Credentials. Incorrect Password.',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Login successful!',
+      data: candidate,
+    });
+  } catch (err) {
+    console.error('Error logging in candidate:', err);
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to authenticate candidate.',
+    });
+  }
+});
+
+// 7. Admin Endpoint: Reset Candidate Password
+router.post('/candidate/reset-password', async (req, res) => {
+  try {
+    const { candidateId, newPassword } = req.body;
+
+    if (!candidateId || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        error: 'candidateId and newPassword are required.',
+      });
+    }
+
+    const updatedCandidate = await prisma.onboardingCandidate.update({
+      where: { id: candidateId },
+      data: { password: newPassword.trim() },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Password updated successfully for candidate ${updatedCandidate.fullName}`,
+      data: updatedCandidate,
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to reset candidate password.',
+    });
+  }
+});
+
+// 8. Delete Candidate Document
+router.delete('/document/:docId', async (req, res) => {
+  try {
+    const { docId } = req.params;
+
+    const doc = await prisma.onboardingDocument.findUnique({
+      where: { id: docId },
+    });
+
+    if (!doc) {
+      return res.status(404).json({ success: false, error: 'Document not found.' });
+    }
+
+    await prisma.onboardingDocument.delete({
+      where: { id: docId },
+    });
+
+    const updatedCandidate = await prisma.onboardingCandidate.findUnique({
+      where: { id: doc.candidateId },
+      include: { documents: true },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Document deleted successfully.',
+      data: updatedCandidate,
+    });
+  } catch (err) {
+    console.error('Error deleting document:', err);
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to delete document.',
+    });
+  }
+});
+
+// 9. Replace / Edit Candidate Document
+router.post('/document/replace', async (req, res) => {
+  try {
+    const { docId, name, size, fileBase64 } = req.body;
+
+    if (!docId || !fileBase64) {
+      return res.status(400).json({ success: false, error: 'docId and fileBase64 are required.' });
+    }
+
+    const updatedDoc = await prisma.onboardingDocument.update({
+      where: { id: docId },
+      data: {
+        name: name || 'updated_document.pdf',
+        size: size || '1.0 MB',
+        fileBase64,
+        status: 'Pending',
+        remark: null,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Document replaced successfully.',
+      data: updatedDoc,
+    });
+  } catch (err) {
+    console.error('Error replacing document:', err);
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to replace document.',
+    });
+  }
+});
+
+// 10. Delete Onboarding Candidate & All Associated Documents
+router.delete('/candidate/:candidateId', async (req, res) => {
+  try {
+    const { candidateId } = req.params;
+
+    const candidate = await prisma.onboardingCandidate.findUnique({
+      where: { id: candidateId },
+    });
+
+    if (!candidate) {
+      return res.status(404).json({ success: false, error: 'Candidate onboarding record not found.' });
+    }
+
+    await prisma.onboardingCandidate.delete({
+      where: { id: candidateId },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Candidate onboarding profile for ${candidate.fullName} deleted successfully.`,
+    });
+  } catch (err) {
+    console.error('Error deleting candidate:', err);
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to delete candidate onboarding profile.',
+    });
+  }
+});
+
 module.exports = router;
+
+
