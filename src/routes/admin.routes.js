@@ -103,7 +103,7 @@ router.get('/verify-token', authenticateJWT, (req, res) => {
   res.status(200).json({ success: true, valid: true, user: req.user });
 });
 
-// Admin Dashboard Overview Statsssssssss
+// Admin Dashboard Overview Stats
 router.get('/stats', authenticateJWT, async (req, res) => {
   try {
     const [totalContacts, newContacts, totalApplications, totalJobs, totalOnboardings, pendingOnboardings] = await Promise.all([
