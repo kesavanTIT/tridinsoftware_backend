@@ -89,6 +89,27 @@ router.post('/apply', async (req, res) => {
 router.get('/applications', async (req, res) => {
   try {
     const applications = await prisma.jobApplication.findMany({
+      select: {
+        id: true,
+        roleTitle: true,
+        department: true,
+        applicantName: true,
+        applicantEmail: true,
+        applicantPhone: true,
+        experience: true,
+        qualification: true,
+        noticePeriod: true,
+        currentLocation: true,
+        relocateConsent: true,
+        keySkills: true,
+        expectedSalary: true,
+        portfolioUrl: true,
+        resumeUrl: true,
+        coverNote: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
 

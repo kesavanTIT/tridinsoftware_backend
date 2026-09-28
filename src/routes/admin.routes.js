@@ -177,16 +177,57 @@ router.delete('/contacts/:id', authenticateJWT, async (req, res) => {
 
 // --- JOB APPLICATIONS ---
 
+// Application select fields excluding heavy base64 strings
+const applicationListSelect = {
+  id: true,
+  roleTitle: true,
+  department: true,
+  applicantName: true,
+  applicantEmail: true,
+  applicantPhone: true,
+  experience: true,
+  qualification: true,
+  noticePeriod: true,
+  currentLocation: true,
+  relocateConsent: true,
+  keySkills: true,
+  expectedSalary: true,
+  portfolioUrl: true,
+  resumeUrl: true,
+  coverNote: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+};
+
 // Get All Job Applications (JWT Protected)
 router.get('/applications', authenticateJWT, async (req, res) => {
   try {
     const applications = await prisma.jobApplication.findMany({
+      select: applicationListSelect,
       orderBy: { createdAt: 'desc' },
     });
     res.status(200).json({ success: true, count: applications.length, applications });
   } catch (error) {
     console.error('Fetch Applications Error:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch job applications' });
+  }
+});
+
+// Get Single Application Detail (JWT Protected)
+router.get('/applications/:id', authenticateJWT, async (req, res) => {
+  try {
+    const { id } = req.params;
+    const application = await prisma.jobApplication.findUnique({
+      where: { id },
+    });
+    if (!application) {
+      return res.status(404).json({ success: false, message: 'Application not found' });
+    }
+    res.status(200).json({ success: true, application });
+  } catch (error) {
+    console.error('Fetch Application Detail Error:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch application detail' });
   }
 });
 
