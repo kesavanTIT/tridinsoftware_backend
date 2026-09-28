@@ -10,21 +10,41 @@ const onboardingRoutes = require('./routes/onboarding.routes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Bulletproof CORS Middleware for Production & Local Development
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+// Bulletproof CORS Configuration for Production & Local Development
+const allowedOrigins = [
+  'https://tridinsoftware.com',
+  'https://www.tridinsoftware.com',
+  'https://admin.tridinsoftware.com',
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:5000',
+  'http://localhost:4173'
+];
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.includes(origin) ||
+      /^https:\/\/.*\.tridinsoftware\.com$/.test(origin) ||
+      process.env.NODE_ENV !== 'production'
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
+// Ensure Vary: Origin is present on all responses to prevent CDN/Cloudflare caching issues
+app.use((req, res, next) => {
+  res.setHeader('Vary', 'Origin');
   next();
 });
 app.use(express.json({ limit: '50mb' }));
@@ -50,6 +70,15 @@ app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: `Cannot ${req.method} ${req.originalUrl}`,
+  });
+});
+
+// Global Unhandled Error Handler (Ensures CORS headers are retained on internal errors)
+app.use((err, req, res, next) => {
+  console.error('Unhandled Backend Server Error:', err);
+  res.status(err.status || 500).json({
+    success: false,
+    message: err.message || 'Internal Server Error',
   });
 });
 
