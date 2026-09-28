@@ -124,11 +124,19 @@ const sendJobApplicationNotification = async (appData) => {
   `;
 
   const attachments = [];
-  if (appData.resumeBase64) {
-    attachments.push({
-      filename: appData.resumeFileName || 'Candidate_Resume.pdf',
-      path: appData.resumeBase64,
-    });
+  if (appData.resumeBase64 && typeof appData.resumeBase64 === 'string' && appData.resumeBase64.trim()) {
+    try {
+      const base64Clean = appData.resumeBase64.includes('base64,')
+        ? appData.resumeBase64.split('base64,')[1]
+        : appData.resumeBase64;
+
+      attachments.push({
+        filename: appData.resumeFileName || 'Candidate_Resume.pdf',
+        content: Buffer.from(base64Clean, 'base64'),
+      });
+    } catch (attErr) {
+      console.error('Error formatting resume attachment for email:', attErr);
+    }
   }
 
   return await sendMail({
