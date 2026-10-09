@@ -74,45 +74,83 @@ model Job {
 
 // Brand New Employee Document Onboarding Models
 model OnboardingCandidate {
-  id                   String               @id @default(uuid())
-  onboardingId         String               @unique // e.g. Tridin-2026-9842
-  fullName             String
-  email                String               @unique
-  password             String               @default("Tridin@2026")
-  phone                String               @default("")
-  role                 String               @default("Software Engineer")
-  department           String               @default("Engineering")
-  joiningDate          String?
-  dob                  String?
-  gender               String?              @default("Male")
-  bloodGroup           String?              @default("O+")
-  currentAddress       String?
-  permanentAddress     String?
-  emergencyContactName String?
+  id                    String               @id @default(uuid())
+  onboardingId          String               @unique // e.g. TD2201
+  fullName              String
+  email                 String               @unique
+  password              String               @default("Tridin@2026")
+  phone                 String               @default("")
+  role                  String               @default("Software Engineer")
+  department            String               @default("Engineering")
+  joiningDate           String?
+  dob                   String?
+  gender                String?              @default("Male")
+  bloodGroup            String?              @default("O+")
+  currentAddress        String?
+  permanentAddress      String?
+  emergencyContactName  String?
   emergencyContactPhone String?
-  bankName             String?
-  accountNumber        String?
-  ifscCode             String?
-  panNumber            String?              @default("")
-  aadharNumber         String?              @default("")
-  status               String               @default("Pending") // Pending, Verified, Action Required
-  documents            OnboardingDocument[]
-  createdAt            DateTime             @default(now())
-  updatedAt            DateTime             @updatedAt
+  bankName              String?
+  accountNumber         String?
+  ifscCode              String?
+  panNumber             String?              @default("")
+  aadharNumber          String?              @default("")
+  status                String               @default("Pending") // Pending, Verified, Action Required
+  documents             OnboardingDocument[]
+  assetAssignments      AssetAssignment[]
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
 }
 
 model OnboardingDocument {
+  id          String              @id @default(uuid())
+  category    String              // Identity, Tenth, Twelfth, Education, Experience, Banking, Personal
+  type        String              // Aadhar Card, PAN Card, Degree Certificate, etc.
+  name        String              // File name
+  size        String?             // File size string e.g. 1.2 MB
+  fileUrl     String?             // Path or URL to file
+  fileBase64  String?             // Optional base64 or fallback
+  status      String              @default("Pending") // Pending, Approved, Rejected
+  remark      String?             // HR rejection remark if any
+  candidateId String
+  candidate   OnboardingCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+// ─── Asset Management Models ───────────────────────────────────────────────
+
+model Asset {
+  id             String            @id @default(uuid())
+  assetId        String            @unique // e.g. AST-LAP-0001
+  assetName      String            // e.g. Dell Latitude 5420
+  assetType      String            // Laptop, Bag, Charger, Mouse, Monitor, Other
+  assetCategory  String            @default("IT Equipment") // IT Equipment, Furniture, etc.
+  brand          String?           @default("")
+  model          String?           @default("")
+  serialNumber   String?           @default("") // Physical serial number on device
+  assetTag       String?           @default("") // Sticker tag e.g. TRD-LAP-001
+  status         String            @default("Available") // Available, Assigned, In Repair, Retired
+  condition      String            @default("Good") // Good, Fair, Damaged
+  purchaseDate   String?
+  warrantyExpiry String?
+  notes          String?
+  assignments    AssetAssignment[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model AssetAssignment {
   id           String              @id @default(uuid())
-  category     String              // Identity, Tenth, Twelfth, Education, Experience, Banking, Personal
-  type         String              // Aadhar Card, PAN Card, Degree Certificate, etc.
-  name         String              // File name
-  size         String?             // File size string e.g. 1.2 MB
-  fileUrl      String?             // Path or URL to file
-  fileBase64   String?             // Optional base64 or fallback
-  status       String              @default("Pending") // Pending, Approved, Rejected
-  remark       String?             // HR rejection remark if any
+  assetId      String
+  asset        Asset               @relation(fields: [assetId], references: [id], onDelete: Cascade)
   candidateId  String
   candidate    OnboardingCandidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  assignedDate String              // Date of issue e.g. 2026-10-09
+  returnDate   String?             // Date of return, null if not returned
+  assignedBy   String              @default("Admin")
+  remarks      String?             // e.g. Issued on Day 1 joining
+  status       String              @default("Issued") // Issued, Returned
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
 }

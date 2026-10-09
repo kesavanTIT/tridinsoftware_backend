@@ -290,6 +290,48 @@ router.post('/submit', async (req, res) => {
   }
 });
 
+// 1.5 Upload Agreements (Policy, Authorization, Employment)
+router.post('/upload-agreements', async (req, res) => {
+  try {
+    const { candidateId, documents } = req.body;
+
+    if (!candidateId || !documents || !documents.length) {
+      return res.status(400).json({
+        success: false,
+        error: 'Candidate ID and documents are required.',
+      });
+    }
+
+    const createdDocs = await Promise.all(
+      documents.map(async (doc) => {
+        return prisma.onboardingDocument.create({
+          data: {
+            candidateId,
+            category: 'Agreements',
+            type: doc.type, // 'Policy Document', 'Letter of Authorization', 'Employment Agreement'
+            name: doc.name,
+            size: doc.size || '1.0 MB',
+            fileBase64: doc.fileBase64 || '',
+            status: 'Pending',
+          },
+        });
+      })
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'Agreements uploaded successfully!',
+      data: createdDocs,
+    });
+  } catch (err) {
+    console.error('Error uploading agreements:', err);
+    res.status(500).json({
+      success: false,
+      error: err.message || 'Failed to upload agreements.',
+    });
+  }
+});
+
 // 2. Track Candidate Status by Onboarding ID or Email
 router.get('/track/:query', async (req, res) => {
   try {
