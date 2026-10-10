@@ -131,9 +131,33 @@ const sendCandidateCredentialsEmail = async (candidate) => {
               </a>
             </div>
 
-            <hr style="border: none; border-top: 1px solid #334155; margin: 25px 0;" />
-            <p style="font-size: 12px; color: #64748b; margin: 0; text-align: center;">
-              If you have any questions, please reply to this email or contact <strong>career@tridinsoftware.com</strong>.<br/>
+            <!-- Professional Signature -->
+            <hr style="border: none; border-top: 1px solid #334155; margin: 30px 0 20px 0;" />
+            <div style="background-color: #ffffff; padding: 25px; border-radius: 16px; color: #334155; font-family: 'Segoe UI', Arial, sans-serif;">
+              <p style="margin: 0 0 15px 0; font-size: 14px;">Best regards,</p>
+              
+              <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
+                <tr>
+                  <td style="padding-right: 20px; border-right: 2px solid #e2e8f0; vertical-align: middle;">
+                    <img src="https://res.cloudinary.com/trt4geyq/image/upload/v1727783935/tridin_logo_hq.png" alt="Tridin Logo" width="130" style="display: block; max-width: 130px; height: auto;" />
+                  </td>
+                  <td style="padding-left: 20px; vertical-align: middle;">
+                    <strong style="color: #0f172a; font-size: 16px; text-transform: uppercase;">HR Onboarding Team</strong><br/>
+                    <span style="color: #64748b; font-size: 13px;">career@tridinsoftware.com</span><br/>
+                    <a href="https://www.tridinsoftware.com" style="color: #0ea5e9; text-decoration: none; font-size: 13px; font-weight: 600;">www.tridinsoftware.com</a>
+                  </td>
+                </tr>
+              </table>
+
+              <ul style="margin: 0; padding-left: 15px; font-size: 12px; color: #475569; line-height: 1.6;">
+                <li style="margin-bottom: 5px;">Kindly do not change the password of your official mail ID under any circumstances.</li>
+                <li style="margin-bottom: 5px;">All communications conducted via this email account must comply with <strong style="color: #0f172a;">Tridin Software's</strong> IT and communication policies.</li>
+                <li style="margin-bottom: 5px;">If you require any assistance accessing your account or have any questions regarding usage policies, please contact the IT Support at <a href="mailto:itsupport@tridinsoftware.com" style="color: #0ea5e9; text-decoration: none; font-weight: 600;">itsupport@tridinsoftware.com</a>.</li>
+                <li>We wish you a smooth onboarding process and look forward to your contributions to <strong style="color: #0f172a;">Tridin Software</strong>.</li>
+              </ul>
+            </div>
+
+            <p style="font-size: 11px; color: #64748b; margin: 20px 0 0 0; text-align: center;">
               &copy; Tridin Software Private Limited. All rights reserved.
             </p>
           </div>
