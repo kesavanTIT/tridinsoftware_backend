@@ -441,7 +441,7 @@ router.post('/verify-doc', async (req, res) => {
 // 5. Admin Endpoint: Create Candidate Profile with Credentials (ID format: Tridin-2026-XXXX)
 router.post('/candidate/create', async (req, res) => {
   try {
-    const { fullName, email, phone, role, password } = req.body;
+    const { fullName, email, phone, role, password, candidateId } = req.body;
 
     if (!fullName || !email) {
       return res.status(400).json({
@@ -451,7 +451,7 @@ router.post('/candidate/create', async (req, res) => {
     }
 
     const year = new Date().getFullYear();
-    const onboardingId = await generateNextEmpId();
+    const onboardingId = (candidateId && candidateId.trim()) ? candidateId.trim() : await generateNextEmpId();
     const candidatePassword = password && password.trim() ? password.trim() : `Tridin@${year}`;
 
     // Check if candidate with email already exists

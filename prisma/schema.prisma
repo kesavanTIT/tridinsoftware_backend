@@ -128,7 +128,11 @@ model Asset {
   assetCategory  String            @default("IT Equipment") // IT Equipment, Furniture, etc.
   brand          String?           @default("")
   model          String?           @default("")
+  modelNumber    String?           @default("")
   serialNumber   String?           @default("") // Physical serial number on device
+  processor      String?           @default("")
+  ram            String?           @default("")
+  storage        String?           @default("")
   assetTag       String?           @default("") // Sticker tag e.g. TRD-LAP-001
   status         String            @default("Available") // Available, Assigned, In Repair, Retired
   condition      String            @default("Good") // Good, Fair, Damaged
