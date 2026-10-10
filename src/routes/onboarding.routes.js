@@ -139,7 +139,7 @@ const sendCandidateCredentialsEmail = async (candidate) => {
               <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 20px;">
                 <tr>
                   <td style="padding-right: 20px; border-right: 2px solid #e2e8f0; vertical-align: middle;">
-                    <img src="https://res.cloudinary.com/trt4geyq/image/upload/v1727783935/tridin_logo_hq.png" alt="Tridin Logo" width="130" style="display: block; max-width: 130px; height: auto;" />
+                    <img src="https://onboarding.tridinsoftware.com/Tridin_Software_Logo_Transparent.png" alt="Tridin Logo" width="130" style="display: block; max-width: 130px; height: auto;" />
                   </td>
                   <td style="padding-left: 20px; vertical-align: middle;">
                     <strong style="color: #0f172a; font-size: 16px; text-transform: uppercase;">HR Onboarding Team</strong><br/>
