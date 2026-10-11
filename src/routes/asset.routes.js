@@ -221,9 +221,7 @@ router.get('/assignments/all', async (req, res) => {
   try {
     const assignments = await prisma.assetAssignment.findMany({
       include: {
-        asset: {
-          select: { assetId: true, assetName: true, assetType: true, serialNumber: true, assetTag: true, condition: true },
-        },
+        asset: true,
         candidate: {
           select: { fullName: true, onboardingId: true, email: true, role: true },
         },
