@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
+const path = require('path');
+const fs = require('fs');
 const nodemailer = require('nodemailer');
 
 // Initialize ZeptoMail Transporter
@@ -86,11 +88,25 @@ const sendCandidateCredentialsEmail = async (candidate) => {
     const fromName = process.env.SMTP_FROM_NAME || 'Tridin Software Careers';
     const portalUrl = process.env.CANDIDATE_PORTAL_URL || 'https://onboarding.tridinsoftware.com/';
 
+    const logoPath = path.join(__dirname, '../assets/Tridin_Software_Logo_Transparent.png');
+    const attachments = [];
+    let logoSrc = 'https://onboarding.tridinsoftware.com/Tridin_Software_Logo_Transparent.png';
+
+    if (fs.existsSync(logoPath)) {
+      attachments.push({
+        filename: 'Tridin_Software_Logo_Transparent.png',
+        path: logoPath,
+        cid: 'tridin_logo',
+      });
+      logoSrc = 'cid:tridin_logo';
+    }
+
     await transporter.sendMail({
       from: `"${fromName}" <${fromAddress}>`,
       to: candidate.email,
       replyTo: fromAddress,
       subject: `🎉 Employee Onboarding Credentials Issued - ${candidate.fullName} [${candidate.onboardingId}]`,
+      attachments,
       html: `
         <div style="font-family: Arial, sans-serif; color: #333333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px;">
           
@@ -118,7 +134,7 @@ const sendCandidateCredentialsEmail = async (candidate) => {
           <p style="margin: 0 0 15px 0;">Best regards,</p>
           
           <div style="margin-top: 10px;">
-            <img src="https://onboarding.tridinsoftware.com/Tridin_Software_Logo_Transparent.png" alt="Tridin Logo" width="120" style="display: block; max-width: 120px; height: auto; margin-bottom: 10px;" />
+            <img src="${logoSrc}" alt="Tridin Logo" width="120" style="display: block; max-width: 120px; height: auto; margin-bottom: 10px;" />
             <strong style="color: #0f172a; font-size: 14px; text-transform: uppercase;">HR Onboarding Team</strong><br/>
             <span style="font-size: 13px; color: #475569;">Tridin Software Private Limited</span><br/>
             <a href="mailto:career@tridinsoftware.com" style="color: #64748b; font-size: 12px; text-decoration: none;">career@tridinsoftware.com</a><br/>
