@@ -1,0 +1,41 @@
+{
+  "LEAVE_POLICY": {
+    "id": "leave_policy_default",
+    "category": "LEAVE_POLICY",
+    "title": "Tridin Software - Official Leave Policy (2026)",
+    "description": "Comprehensive company guidelines detailing Casual Leave (CL), Sick Leave (SL), Earned Leave (EL), and Public Holidays.",
+    "fileName": "Tridin_Software_Leave_Policy_2026.pdf",
+    "fileSize": "1.2 MB",
+    "fileBase64": "data:application/pdf;base64,JVBERi0xLjQKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbmd0aCA1IDAgUiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAFjYGBgAAAABAABCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iajw8L1R5cGUvUGFnZXMvQ291bnQgMS9LaWRzWzIgMCBSXT4+CmVuZG9iajoyIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAxIDAgUiAvTWVkaWFCb3hbMCAwIDU5NSA4NDJdL0NvbnRlbnRzIDQgMCBSPj4KZW5kb2JqCjMgMCBvYmo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMSAwIFI+PgplbmRvYmoKNSAwIG9iajw8L0xlbmd0aCAxMD4+CnN0cmVhbQplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDEzNyAwMDAwMCBuIAowMDAwMDAwMTkyIDAwMDAwIG4gCjAwMDAwMDAyNzggMDAwMDAgbiAKMDAwMDAwMDAxOSAwMDAwMCBuIAowMDAwMDAwMzI3IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1Jvb3QgMyAwIFIgL1NpemUgNiA+PgpzdGFydHhyZWYKMzgwCiUlRU9GCg==",
+    "fileUrl": "",
+    "uploadedBy": "HR Compliance Team",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  },
+  "HOLIDAY_CALENDAR": {
+    "id": "holiday_calendar_default",
+    "category": "HOLIDAY_CALENDAR",
+    "title": "Official Annual Holiday Calendar 2026",
+    "description": "Complete calendar of national holidays, state holidays, and optional festival leaves for 2026.",
+    "fileName": "Tridin_Annual_Holiday_Calendar_2026.pdf",
+    "fileSize": "950 KB",
+    "fileBase64": "data:application/pdf;base64,JVBERi0xLjQKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbmd0aCA1IDAgUiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAFjYGBgAAAABAABCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iajw8L1R5cGUvUGFnZXMvQ291bnQgMS9LaWRzWzIgMCBSXT4+CmVuZG9iajoyIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAxIDAgUiAvTWVkaWFCb3hbMCAwIDU5NSA4NDJdL0NvbnRlbnRzIDQgMCBSPj4KZW5kb2JqCjMgMCBvYmo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMSAwIFI+PgplbmRvYmoKNSAwIG9iajw8L0xlbmd0aCAxMD4+CnN0cmVhbQplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDEzNyAwMDAwMCBuIAowMDAwMDAwMTkyIDAwMDAwIG4gCjAwMDAwMDAyNzggMDAwMDAgbiAKMDAwMDAwMDAxOSAwMDAwMCBuIAowMDAwMDAwMzI3IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1Jvb3QgMyAwIFIgL1NpemUgNiA+PgpzdGFydHhyZWYKMzgwCiUlRU9GCg==",
+    "fileUrl": "",
+    "uploadedBy": "HR Operations",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  },
+  "UAN_ACTIVATION": {
+    "id": "uan_activation_default",
+    "category": "UAN_ACTIVATION",
+    "title": "EPFO UAN Member Portal Activation Guide",
+    "description": "Official step-by-step instructions for employees to activate their Universal Account Number (UAN) on EPFO portal and link Aadhar/PAN.",
+    "fileName": "Tridin_EPFO_UAN_Activation_Guide.pdf",
+    "fileSize": "1.5 MB",
+    "fileBase64": "data:application/pdf;base64,JVBERi0xLjQKJcTl8uXrp/Og0MTGCjQgMCBvYmoKPDwgL0xlbmd0aCA1IDAgUiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAFjYGBgAAAABAABCmVuZHN0cmVhbQplbmRvYmoKMSAwIG9iajw8L1R5cGUvUGFnZXMvQ291bnQgMS9LaWRzWzIgMCBSXT4+CmVuZG9iajoyIDAgb2JqPDwvVHlwZS9QYWdlL1BhcmVudCAxIDAgUiAvTWVkaWFCb3hbMCAwIDU5NSA4NDJdL0NvbnRlbnRzIDQgMCBSPj4KZW5kb2JqCjMgMCBvYmo8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMSAwIFI+PgplbmRvYmoKNSAwIG9iajw8L0xlbmd0aCAxMD4+CnN0cmVhbQplbmRzdHJlYW0KZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDEzNyAwMDAwMCBuIAowMDAwMDAwMTkyIDAwMDAwIG4gCjAwMDAwMDAyNzggMDAwMDAgbiAKMDAwMDAwMDAxOSAwMDAwMCBuIAowMDAwMDAwMzI3IDAwMDAwIG4gCnRyYWlsZXIKPDwgL1Jvb3QgMyAwIFIgL1NpemUgNiA+PgpzdGFydHhyZWYKMzgwCiUlRU9GCg==",
+    "fileUrl": "",
+    "uploadedBy": "Compliance Team",
+    "createdAt": "2026-01-01T00:00:00.000Z",
+    "updatedAt": "2026-01-01T00:00:00.000Z"
+  }
+}

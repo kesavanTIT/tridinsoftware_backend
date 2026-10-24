@@ -7,6 +7,7 @@ const careerRoutes = require('./routes/career.routes');
 const adminRoutes = require('./routes/admin.routes');
 const onboardingRoutes = require('./routes/onboarding.routes');
 const assetRoutes = require('./routes/asset.routes');
+const policyRoutes = require('./routes/policy.routes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -66,6 +67,7 @@ app.use('/api/careers', careerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/assets', assetRoutes);
+app.use('/api/policies', policyRoutes);
 
 // 404 Route Handler
 app.use((req, res) => {
